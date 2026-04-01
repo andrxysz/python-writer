@@ -409,8 +409,8 @@ class PythonWriterWindow(QWidget):
         self._active_hotkey: HotkeySpec | None = None
 
         self.setWindowTitle("Python-Writer")
-        self.resize(560, 760)
-        self.setMinimumSize(520, 720)
+        self.resize(620, 840)
+        self.setMinimumSize(560, 760)
         self.setObjectName("window")
 
         self.hotkeys = GlobalHotkeyManager(self.winId)
@@ -426,17 +426,9 @@ class PythonWriterWindow(QWidget):
     def _build_ui(self) -> None:
         root_layout = QVBoxLayout(self)
         root_layout.setContentsMargins(20, 20, 20, 20)
-        root_layout.setSpacing(14)
+        root_layout.setSpacing(12)
 
         root_layout.addWidget(self._build_hero_card())
-
-        root_layout.addWidget(
-            self._build_info_card(
-                "Fluxo rapido",
-                "Cole o texto, deixe o cursor no campo desejado e pressione a hotkey ativa. "
-                "A mesma hotkey interrompe a digitacao e o botao Parar fica disponivel durante o envio.",
-            )
-        )
 
         root_layout.addWidget(self._build_config_card())
         root_layout.addWidget(self._build_text_card(), stretch=1)
@@ -453,7 +445,7 @@ class PythonWriterWindow(QWidget):
         title.setProperty("role", "heroTitle")
 
         subtitle = QLabel(
-            "Automatize textos com uma hotkey global, ritmo configuravel e feedback visual em tempo real."
+            "Automatize textos com uma hotkey global e acompanhe a digitacao em tempo real."
         )
         subtitle.setWordWrap(True)
         subtitle.setProperty("role", "heroSubtitle")
@@ -494,13 +486,11 @@ class PythonWriterWindow(QWidget):
         card = self._make_card()
         layout = QVBoxLayout(card)
         layout.setContentsMargins(16, 16, 16, 16)
-        layout.setSpacing(12)
+        layout.setSpacing(10)
 
         title = QLabel("Hotkey e ritmo")
         title.setProperty("role", "cardTitle")
-        body = QLabel(
-            "Escolha a combinacao global, revise a selecao atual e aplique quando estiver satisfeito."
-        )
+        body = QLabel("Escolha a combinacao global e aplique quando estiver pronta.")
         body.setProperty("role", "cardBody")
         body.setWordWrap(True)
 
@@ -539,7 +529,7 @@ class PythonWriterWindow(QWidget):
         self.key_combo = QComboBox()
         self.key_combo.addItems(KEY_CHOICES)
         self.key_combo.setCurrentText(DEFAULT_HOTKEY.key_name)
-        self.key_combo.setMinimumHeight(38)
+        self.key_combo.setMinimumHeight(36)
         key_group.addWidget(key_label)
         key_group.addWidget(self.key_combo)
 
@@ -552,7 +542,7 @@ class PythonWriterWindow(QWidget):
         self.delay_spinbox.setSingleStep(5)
         self.delay_spinbox.setValue(DEFAULT_DELAY_MS)
         self.delay_spinbox.setSuffix(" ms")
-        self.delay_spinbox.setMinimumHeight(38)
+        self.delay_spinbox.setMinimumHeight(36)
         delay_group.addWidget(delay_label)
         delay_group.addWidget(self.delay_spinbox)
 
@@ -563,8 +553,8 @@ class PythonWriterWindow(QWidget):
         preview_panel = QFrame()
         preview_panel.setProperty("subtlePanel", True)
         preview_layout = QVBoxLayout(preview_panel)
-        preview_layout.setContentsMargins(14, 12, 14, 12)
-        preview_layout.setSpacing(4)
+        preview_layout.setContentsMargins(12, 10, 12, 10)
+        preview_layout.setSpacing(3)
 
         self.hotkey_preview = QLabel("")
         self.hotkey_preview.setProperty("role", "fieldHint")
@@ -579,14 +569,14 @@ class PythonWriterWindow(QWidget):
 
         actions_row = QHBoxLayout()
         actions_row.setSpacing(10)
-        self.restore_defaults_button = QPushButton("Restaurar padrao")
+        self.restore_defaults_button = QPushButton("Padrao")
         self.restore_defaults_button.setObjectName("ghostButton")
-        self.restore_defaults_button.setMinimumHeight(40)
+        self.restore_defaults_button.setMinimumHeight(36)
         self.restore_defaults_button.clicked.connect(self.restore_defaults)
 
         self.apply_button = QPushButton("Aplicar hotkey")
         self.apply_button.setObjectName("accentButton")
-        self.apply_button.setMinimumHeight(40)
+        self.apply_button.setMinimumHeight(36)
         self.apply_button.clicked.connect(self.apply_hotkey)
 
         actions_row.addWidget(self.restore_defaults_button)
@@ -599,14 +589,11 @@ class PythonWriterWindow(QWidget):
         card = self._make_card()
         layout = QVBoxLayout(card)
         layout.setContentsMargins(16, 16, 16, 16)
-        layout.setSpacing(10)
+        layout.setSpacing(9)
 
         title = QLabel("Texto para digitar")
         title.setProperty("role", "cardTitle")
-        body = QLabel(
-            "Espacos, quebras de linha e paragrafos serao enviados do mesmo jeito. "
-            "Use as metricas para conferir tamanho e duracao estimada."
-        )
+        body = QLabel("Confira o tamanho do texto e a duracao estimada antes de disparar.")
         body.setProperty("role", "cardBody")
         body.setWordWrap(True)
 
@@ -621,8 +608,8 @@ class PythonWriterWindow(QWidget):
 
         metrics_grid.addWidget(characters_card, 0, 0)
         metrics_grid.addWidget(words_card, 0, 1)
-        metrics_grid.addWidget(lines_card, 1, 0)
-        metrics_grid.addWidget(duration_card, 1, 1)
+        metrics_grid.addWidget(lines_card, 0, 2)
+        metrics_grid.addWidget(duration_card, 0, 3)
 
         self.textbox = QPlainTextEdit()
         self.textbox.setPlaceholderText("Cole ou escreva o texto que deseja enviar...")
@@ -674,7 +661,7 @@ class PythonWriterWindow(QWidget):
         self.status_label.setProperty("role", "status")
 
         note = QLabel(
-            "Dica: use pelo menos um modificador para evitar conflitos. Durante a digitacao, os campos ficam bloqueados para evitar mudancas acidentais."
+            "Dica: use pelo menos um modificador para evitar conflitos. Durante a digitacao, use Parar ou a propria hotkey para interromper."
         )
         note.setWordWrap(True)
         note.setProperty("role", "cardBody")
@@ -689,8 +676,8 @@ class PythonWriterWindow(QWidget):
         card = QFrame()
         card.setProperty("metric", True)
         layout = QVBoxLayout(card)
-        layout.setContentsMargins(12, 12, 12, 12)
-        layout.setSpacing(2)
+        layout.setContentsMargins(10, 10, 10, 10)
+        layout.setSpacing(1)
 
         value = QLabel("0")
         value.setProperty("role", "metricValue")
@@ -738,37 +725,37 @@ class PythonWriterWindow(QWidget):
                     stop: 1 {self.HERO_BOTTOM}
                 );
                 border: 1px solid #244A5C;
-                border-radius: 24px;
+                border-radius: 22px;
             }}
             QFrame[card="true"] {{
                 background: {self.PANEL};
                 border: 1px solid #E7DDCF;
-                border-radius: 18px;
+                border-radius: 16px;
             }}
             QFrame[subtlePanel="true"] {{
                 background: {self.FIELD};
                 border: 1px solid #E7DDCF;
-                border-radius: 14px;
+                border-radius: 12px;
             }}
             QFrame[metric="true"] {{
                 background: #FBF7F0;
                 border: 1px solid #E5D9CB;
-                border-radius: 14px;
+                border-radius: 12px;
             }}
             QLabel[role="heroTitle"] {{
                 color: #FFFDF8;
                 font-family: "Bahnschrift";
-                font-size: 25px;
+                font-size: 24px;
                 font-weight: 700;
             }}
             QLabel[role="heroSubtitle"] {{
                 color: #DCEAF0;
-                font-size: 10pt;
+                font-size: 9.5pt;
             }}
             QLabel[role="heroBadge"],
             QLabel[role="heroBadgeMuted"] {{
-                padding: 6px 12px;
-                border-radius: 14px;
+                padding: 5px 10px;
+                border-radius: 12px;
                 font-size: 9pt;
                 font-weight: 600;
                 background: transparent;
@@ -812,7 +799,7 @@ class PythonWriterWindow(QWidget):
             QLabel[role="metricValue"] {{
                 color: {self.TEXT};
                 font-family: "Bahnschrift";
-                font-size: 17px;
+                font-size: 16px;
                 font-weight: 700;
                 background: transparent;
                 border: none;
@@ -836,8 +823,8 @@ class PythonWriterWindow(QWidget):
                 background: {self.FIELD};
                 color: {self.TEXT};
                 border: 1px solid {self.BORDER};
-                border-radius: 12px;
-                min-height: 38px;
+                border-radius: 10px;
+                min-height: 36px;
                 padding: 0 10px;
                 selection-background-color: #BFE4E0;
             }}
@@ -882,9 +869,9 @@ class PythonWriterWindow(QWidget):
                 border: 1px solid {self.ACCENT};
             }}
             QPushButton {{
-                border-radius: 12px;
-                min-height: 40px;
-                padding: 8px 14px;
+                border-radius: 10px;
+                min-height: 36px;
+                padding: 6px 12px;
                 font-weight: 600;
                 border: none;
             }}
